@@ -27,16 +27,22 @@ begin
     
     ff_in <= not or_reduce(xor_res);
     
-    esw_ff: process(clk, rst) -- flip flop with async reset
+    esw_ff: process(clk, rst) 
     begin
-        if(rst = '1') or (rising_edge(clk)) then
+        if(rst = '1') then
             ff_out <= '1';
+	elseif(rising_edge(clk)) then
+	    ff_out <= ff_in;	
         end if;
     end process;
     
-    esw_mask: process(c_mod, ff_out) -- and with ff_out
+    esw_mask: process(c_mod, ff_out) 
     begin
-        c <= c_mod;
+i	if(ff_out = '1') then
+            c <= c_mod;
+        else 
+            c <= std_logic_vector(to_signed(0, size));
+        end if;
     end process;
     c_esw <= c;
 end Behavioral;
