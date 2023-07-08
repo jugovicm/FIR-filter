@@ -27,20 +27,20 @@ begin
     
     ff_in <= not or_reduce(xor_res);
     
-    esw_ff: process(clk, rst) 
+    esw_ff: process(clk, rst) -- flip flop with async reset
     begin
         if(rst = '1') then
             ff_out <= '1';
-	elseif(rising_edge(clk)) then
-	    ff_out <= ff_in;	
+        elsif(rising_edge(clk)) then
+            ff_out <= ff_in;
         end if;
     end process;
     
-    esw_mask: process(c_mod, ff_out) 
+    esw_mask: process(c_mod, ff_out) -- and with ff_out
     begin
-i	if(ff_out = '1') then
+        if(ff_out = '1') then
             c <= c_mod;
-        else 
+        else
             c <= std_logic_vector(to_signed(0, size));
         end if;
     end process;
